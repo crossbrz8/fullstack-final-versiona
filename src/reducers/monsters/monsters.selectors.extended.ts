@@ -1,35 +1,32 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { selectSelectedMonster } from './monsters.selectors';
+import { Monster } from '../../models/interfaces/monster.interface';
 
-// Returns the winner from the monstersExtended state slice
+// Selector to get the winner from the monstersExtended state
+// Takes the full Redux state and returns the winner property
 export const monsterWins = (state: RootState) => {
   return state.monstersExtended.winner;
 };
 
-// Basic selectors to get pieces of state
-const selectMonstersState = (state: RootState) => state.monsters;
-const selectSelectedMonsterId = (state: RootState) =>
-  state.monsters.selectedMonster?.id;
+// Selector to get the randomMonster flag from monstersExtended state
+// This is likely used to determine if random monster selection is enabled
+export const selectRandomMonster = (state: RootState) =>
+  state.monstersExtended.selectRandomMonster;
 
-// Creates a memoized selector that returns a random monster, excluding the currently selected one
-export const selectRandomMonster = createSelector(
-  // Input selectors that this selector depends on
-  [selectMonstersState, selectSelectedMonsterId],
-  (monstersState, selectedId) => {
-    // If no monster is selected, return null
-    if (!selectedId) {
-      return null;
-    }
-    console.log('selectedId', selectedId); // id of the selected monster
-    console.log('monstersState', monstersState); // all monsters in the state
-    const monsters = monstersState.monsters;
-    // Filter out the currently selected monster from the available choices
-    const availableMonsters = monsters.filter(
-      monster => monster.id !== selectedId,
+// Create a memoized selector that filters out the currently selected monster
+// from the list of all monsters
+// Uses createSelector for performance optimization through memoization
+export const randomMonsters = createSelector(
+  // Input selectors: gets the selected monster and all monsters
+  [selectSelectedMonster, state => state.monsters.monsters],
+  // Result function: takes the values from input selectors as arguments
+  (selectedMonster, monsters): Monster[] => {
+    // If no monster is selected, return all monsters
+    if (!selectedMonster) return monsters;
+    // Otherwise, return all monsters except the currently selected one
+    return monsters.filter(
+      (monster: Monster) => monster.id !== selectedMonster.id,
     );
-    // Generate a random index within the available monsters array
-    const randomIndex = Math.floor(Math.random() * availableMonsters.length);
-    // Return the randomly selected monster or null if none are available
-    return availableMonsters[randomIndex] || null;
   },
 );

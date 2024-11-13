@@ -13,13 +13,17 @@ import {
 import {
   monsterWins,
   selectRandomMonster,
+  randomMonsters,
 } from '../../reducers/monsters/monsters.selectors.extended';
 import {
   BattleSection,
   PageContainer,
   StartBattleButton,
 } from './BattleOfMonsters.extended.styled';
-import { fetchBattleWins } from '../../reducers/monsters/monsters.actions.extended';
+import {
+  fetchBattleWins,
+  setRandomMonster,
+} from '../../reducers/monsters/monsters.actions.extended';
 import { WinnerDisplay } from '../../components/winner-display/WinnerDisplay.extended';
 import { setWinner } from '../../reducers/monsters/monsters.actions.extended';
 
@@ -30,6 +34,14 @@ const BattleOfMonsters = () => {
   const selectedMonster = useSelector(selectSelectedMonster);
   const computerMonster = useSelector(selectRandomMonster);
   const winner = useSelector(monsterWins);
+  const availableMonsters = useSelector(randomMonsters);
+
+  useEffect(() => {
+    if (selectedMonster) {
+      const randomIndex = Math.floor(Math.random() * availableMonsters.length);
+      dispatch(setRandomMonster(availableMonsters[randomIndex]));
+    }
+  }, [selectedMonster, availableMonsters, dispatch]);
 
   useEffect(() => {
     dispatch(fetchMonstersData());
@@ -40,9 +52,7 @@ const BattleOfMonsters = () => {
   }, [selectedMonster, dispatch]);
 
   const handleStartBattleClick = () => {
-    // Only proceed if both monsters are selected
     if (selectedMonster && computerMonster) {
-      // Dispatch the battle action with both monster IDs
       dispatch(
         fetchBattleWins({
           monster1Id: selectedMonster.id,

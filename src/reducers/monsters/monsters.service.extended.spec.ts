@@ -4,10 +4,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import { monstersReducerExtended } from './monsters.reducer.extended';
 
 describe('Monsters Service Extended', () => {
+  // Mock the fetch function
   let mockFetch: jest.Mock;
+  // Mock the store
   let store: any;
 
   beforeEach(() => {
+    // Before each test, reset the mocked fetch function and create a fresh Redux store
+    // This ensures tests don't affect each other
     mockFetch = jest.fn();
     global.fetch = mockFetch;
     store = configureStore({
@@ -41,11 +45,13 @@ describe('Monsters Service Extended', () => {
       },
     };
 
+    // Mock the API response to return monster1 as the winner
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ winner: mockMonsters.monster1, tie: false }),
     });
 
+    // Dispatch the battle action
     const result = await store.dispatch(
       MonsterServiceExtended.battle({
         monster1Id: mockMonsters.monster1.id,
@@ -53,6 +59,7 @@ describe('Monsters Service Extended', () => {
       }),
     );
 
+    // Verify that the fetch function was called with the correct arguments
     expect(mockFetch).toHaveBeenCalledWith(`${API_URL}/battle`, {
       method: 'POST',
       headers: {
@@ -64,6 +71,7 @@ describe('Monsters Service Extended', () => {
       }),
     });
 
+    // Verify that the result payload is correct
     expect(result.payload).toEqual({
       winner: mockMonsters.monster1,
       tie: false,
@@ -71,8 +79,11 @@ describe('Monsters Service Extended', () => {
   });
 
   it('should handle battle API errors', async () => {
+    // Mock the API response to return an error
     mockFetch.mockRejectedValueOnce(new Error('Error getting battle winner'));
 
+    // Create mock monster objects with just IDs for testing the error case
+    // We only need IDs here since we're testing the error handling, not the full battle logic
     const mockMonsters = {
       monster1: { id: '1' },
       monster2: { id: '2' },

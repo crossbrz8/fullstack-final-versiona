@@ -7,6 +7,7 @@ import {
   BattleMonsterStat,
   BattleMonsterTitle,
   ContainerForStats,
+  DividerBattle,
   Image,
   ProgressBar,
 } from './MonsterBattleCard.extended.styled';
@@ -17,45 +18,36 @@ type MonsterCardProps = {
 };
 
 const MonsterBattleCard: React.FC<MonsterCardProps> = ({ title, monster }) => {
+  // If no monster is provided, render a placeholder card
   if (!monster) {
     return (
       <BattleMonsterCard centralized>
-        <BattleMonsterTitle centralized>
+        <BattleMonsterTitle>
           {title || 'No Monster Selected'}
         </BattleMonsterTitle>
       </BattleMonsterCard>
     );
   }
   return (
-    <BattleMonsterCard centralized column>
-      <Image src={monster?.imageUrl} height={178} />
-      <BattleMonsterName borderColor="rgba(0, 0, 0, 0.1)">
-        {title!}
-      </BattleMonsterName>
+    <BattleMonsterCard>
+      <Image src={monster.imageUrl} width={283} height={178} />
+      <BattleMonsterName>{title}</BattleMonsterName>
+      <DividerBattle />
       <ContainerForStats>
         <BattleMonsterStat>HP</BattleMonsterStat>
-        <ProgressBar variant="determinate" value={(monster?.hp / 100) * 100} />
+        <ProgressBar variant="determinate" value={monster.hp} />
       </ContainerForStats>
       <ContainerForStats>
         <BattleMonsterStat>Attack</BattleMonsterStat>
-        <ProgressBar
-          variant="determinate"
-          value={(monster?.attack / 100) * 100}
-        />
+        <ProgressBar variant="determinate" value={monster.attack} />
       </ContainerForStats>
       <ContainerForStats>
         <BattleMonsterStat>Defense</BattleMonsterStat>
-        <ProgressBar
-          variant="determinate"
-          value={(monster?.defense / 100) * 100}
-        />
+        <ProgressBar variant="determinate" value={monster.defense} />
       </ContainerForStats>
       <ContainerForStats>
         <BattleMonsterStat>Speed</BattleMonsterStat>
-        <ProgressBar
-          variant="determinate"
-          value={(monster?.speed / 100) * 100}
-        />
+        <ProgressBar variant="determinate" value={monster.speed} />
       </ContainerForStats>
     </BattleMonsterCard>
   );

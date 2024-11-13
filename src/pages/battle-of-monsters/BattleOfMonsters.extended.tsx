@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 
 import { useSelector } from 'react-redux';
 import { useAppDispatch } from '../../app/hooks';
@@ -21,6 +21,7 @@ import {
 } from './BattleOfMonsters.extended.styled';
 import { fetchBattleWins } from '../../reducers/monsters/monsters.actions.extended';
 import { WinnerDisplay } from '../../components/winner-display/WinnerDisplay.extended';
+import { setWinner } from '../../reducers/monsters/monsters.actions.extended';
 
 const BattleOfMonsters = () => {
   const dispatch = useAppDispatch();
@@ -32,10 +33,16 @@ const BattleOfMonsters = () => {
 
   useEffect(() => {
     dispatch(fetchMonstersData());
-  }, [dispatch]);
+  }, []);
 
-  const handleStartBattleClick = useCallback(() => {
+  useEffect(() => {
+    dispatch(setWinner(null));
+  }, [selectedMonster, dispatch]);
+
+  const handleStartBattleClick = () => {
+    // Only proceed if both monsters are selected
     if (selectedMonster && computerMonster) {
+      // Dispatch the battle action with both monster IDs
       dispatch(
         fetchBattleWins({
           monster1Id: selectedMonster.id,
@@ -43,7 +50,7 @@ const BattleOfMonsters = () => {
         }),
       );
     }
-  }, [dispatch, selectedMonster, computerMonster]);
+  };
 
   return (
     <PageContainer>
@@ -61,7 +68,10 @@ const BattleOfMonsters = () => {
           onClick={handleStartBattleClick}>
           Start Battle
         </StartBattleButton>
-        <MonsterBattleCard title="Computer" monster={computerMonster} />
+        <MonsterBattleCard
+          title={computerMonster?.name || 'Computer'}
+          monster={computerMonster}
+        />
       </BattleSection>
     </PageContainer>
   );

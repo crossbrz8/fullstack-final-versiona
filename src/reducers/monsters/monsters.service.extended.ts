@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { API_URL } from '../../constants/env';
-import { Battle, Players } from '../../models/interfaces/battle.interface';
+import { Battle } from '../../models/interfaces/battle.interface';
 
 export const battleMonsters = createAsyncThunk(
   'monsters/battle',
@@ -11,7 +11,6 @@ export const battleMonsters = createAsyncThunk(
     monster1Id: string;
     monster2Id: string;
   }) => {
-    console.log('Battle request with IDs:', { monster1Id, monster2Id });
     if (!monster1Id || !monster2Id) {
       throw new Error('Both monster IDs are required');
     }
@@ -25,7 +24,6 @@ export const battleMonsters = createAsyncThunk(
     });
 
     const data = await response.json();
-    console.log('Battle response:', data);
     return data as Battle;
   },
 );

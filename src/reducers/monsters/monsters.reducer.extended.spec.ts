@@ -10,7 +10,6 @@ describe('Monsters Extended Reducer', () => {
     });
   });
 
-  // Example monster data for testing
   const mockMonster: Monster = {
     id: '1',
     name: 'Test Monster',
@@ -22,14 +21,14 @@ describe('Monsters Extended Reducer', () => {
     imageUrl: 'test.jpg',
   };
 
-  // Example battle result data for testing
+  // Mock battle result data for use in tests
   const mockBattle: Battle = {
     winner: mockMonster,
     tie: false,
   };
 
-  // Add more specific tests based on your actions
-  // These will need to be updated once you implement the reducer actions
+  // Test case for setting a random monster
+  // Verifies that the reducer correctly updates selectRandomMonster state
   it('should handle setting a random monster', () => {
     const action = {
       type: 'monsters/setRandomMonster',
@@ -39,6 +38,8 @@ describe('Monsters Extended Reducer', () => {
     expect(state.selectRandomMonster).toEqual(mockMonster);
   });
 
+  // Test case for setting battle winner
+  // Verifies that the reducer correctly updates winner state
   it('should handle setting battle winner', () => {
     const action = {
       type: 'monsters/setWinner',
@@ -48,6 +49,8 @@ describe('Monsters Extended Reducer', () => {
     expect(state.winner).toEqual(mockBattle);
   });
 
+  // Test case for unknown action types
+  // Ensures reducer doesn't modify state for unrecognized actions
   it('should not modify state for unknown action types', () => {
     const initialState = {
       selectRandomMonster: null,

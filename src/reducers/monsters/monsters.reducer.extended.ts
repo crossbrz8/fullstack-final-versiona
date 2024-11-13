@@ -41,7 +41,6 @@ export const monstersReducerExtended = createReducer(initialState, builder => {
   // Resets the winner to null
   builder.addCase(fetchBattleWins.rejected, state => ({
     ...state,
-    winner: null,
   }));
 
   // Handles the successful fetch of battle wins

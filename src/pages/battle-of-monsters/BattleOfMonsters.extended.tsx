@@ -33,8 +33,8 @@ const BattleOfMonsters = () => {
   const monsters = useSelector(selectMonsters);
   const selectedMonster = useSelector(selectSelectedMonster);
   const computerMonster = useSelector(selectRandomMonster);
-  const winner = useSelector(monsterWins);
   const availableMonsters = useSelector(randomMonsters);
+  const winner = useSelector(monsterWins);
 
   useEffect(() => {
     if (selectedMonster) {

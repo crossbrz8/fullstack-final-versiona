@@ -11,24 +11,14 @@ export const battleMonsters = createAsyncThunk(
     monster1Id: string;
     monster2Id: string;
   }) => {
-    if (!monster1Id || !monster2Id) {
-      throw new Error('Both monster IDs are required');
-    }
-
     const response = await fetch(`${API_URL}/battle`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ monster1Id, monster2Id }),
     });
 
-    const data = await response.json();
-    return data as Battle;
+    return (await response.json()) as Battle;
   },
 );
 
-// Original service can be kept if needed for other purposes
-export const MonsterServiceExtended = {
-  battle: battleMonsters,
-};
+export const MonsterServiceExtended = { battle: battleMonsters };
